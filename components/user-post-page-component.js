@@ -1,28 +1,16 @@
 import { USER_POSTS_PAGE, AUTH_PAGE } from "../routes.js";
-import { renderHeaderComponent } from "./header-component.js";
+import { renderHeaderComponent, renderHeaderUserComponent } from "./header-component.js";
 import { posts, goToPage, user } from "../index.js";
 import { addDislike, addLike } from "../api.js";
 import { likes } from "./likes-names-components.js";
-import { formatDistanceToNow } from "date-fns";
 
-export function renderPostsPageComponent({ appEl, posts }) {
-  console.log("Актуальный список постов:", posts);
+export function renderUserPostsPageComponent({ appEl, posts }) {
+  console.log("Посты",posts);
 
-  /**
-   * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
-   * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
-   */
-  //const result = formatDistanceToNow(new Date(post.createdAt), {includeSeconds: true});
-  function renderPosts() {
+  function renderUserForm() {
     let postHtml = posts.map((post) => { 
-      return `<div class="page-container">
-      <div class="header-container"></div>
-        <ul class="posts">
+      return `
           <li class="post">
-            <div class="post-header" data-user-id="${post.user.id}">
-              <img src="${post.user.imageUrl}" class="post-header__user-image">
-              <p class="post-header__user-name">${post.user.name}</p>
-            </div>
             <div class="post-image-container">
               <img class="post-image" src="${post.imageUrl}">
             </div>
@@ -34,15 +22,14 @@ export function renderPostsPageComponent({ appEl, posts }) {
             </div>
             <p class="post-text">
               <span class="user-name">${post.user.name}</span> ${post.description}</p>
-            <p class="post-date">${formatDistanceToNow(new Date(post.createdAt), {includeSeconds: true})}</p>
-          </li>
-        </ul>
-      </div> `
+            <p class="post-date">${post.createdAt}</p>
+          </li>`
     }).join("");
 
     const appHtml = 
       `<div class="page-container">
         <div class="header-container"></div>
+        <div class="posts-user-header"></div>
         <ul class="posts">
         ${postHtml}
         </ul>
@@ -58,9 +45,15 @@ export function renderPostsPageComponent({ appEl, posts }) {
         });
       });
     }
+
+    renderHeaderUserComponent({
+      element: document.querySelector(".posts-user-header"), posts
+    });
+
     renderHeaderComponent({
       element: document.querySelector(".header-container"),
     });
+
     initLikeListeners();
   }
 
@@ -80,15 +73,14 @@ export function renderPostsPageComponent({ appEl, posts }) {
             })
               .then(() => {
                 posts[index].isLiked = false;
-                posts[index].likes.splice(
-                  posts[index].likes.findIndex((el) => el.id === user._id),
-                  1
-                );
-                renderPosts();
+                posts[index].likes.splice(posts[index].likes.findIndex((el) => el.id === user._id),1);
+                USER_POSTS_PAGE;
+                renderUserForm(); 
+                //console.log('dislike',posts[index].likes);
               })
               .catch((error) => {
                 console.error(error.message);
-              });
+              });   
           } else {
             addLike({
               token: `Bearer ${user.token}`,
@@ -100,10 +92,12 @@ export function renderPostsPageComponent({ appEl, posts }) {
                   id: user._id,
                   name: user.name,
                 });
-                renderPosts();
+                USER_POSTS_PAGE;
+                renderUserForm();
+                //console.log('like',posts[index].likes);
               }).catch((error) => {
                 console.error(error.message);
-              });
+              });     
           }
         } else {
           alert("Только авторизованные пользователи могут ставить лайки");
@@ -112,5 +106,6 @@ export function renderPostsPageComponent({ appEl, posts }) {
       });
     });
   }
-  renderPosts()
+  initLikeListeners();
+  renderUserForm()
 }
