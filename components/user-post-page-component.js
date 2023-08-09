@@ -22,7 +22,7 @@ export function renderUserPostsPageComponent({ appEl, posts }) {
             </div>
             <p class="post-text">
               <span class="user-name">${post.user.name}</span> ${post.description}</p>
-            <p class="post-date">${post.createdAt}</p>
+            <p class="post-date">${formatDistanceToNow(new Date(post.createdAt), {includeSeconds: true})}</p>
           </li>`
     }).join("");
 
