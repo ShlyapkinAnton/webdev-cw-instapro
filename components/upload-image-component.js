@@ -1,6 +1,6 @@
 import { uploadImage } from "../api.js";
 
-export function renderUploadImageComponent({ element, onImageUrlChange }) {
+export function renderUploadImageComponent({ element, onImageUrlChange }) { 
   let imageUrl = "";
 
   const render = () => {
@@ -27,7 +27,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
       `
       }
   </div>
-`;
+  `;
 
     const fileInputElement = element.querySelector(".file-upload-input");
 
@@ -37,7 +37,7 @@ export function renderUploadImageComponent({ element, onImageUrlChange }) {
         const lableEl = document.querySelector(".file-upload-label");
         lableEl.setAttribute("disabled", true);
         lableEl.textContent = "Загружаю файл...";
-        uploadImage({ file }).then(({ fileUrl }) => {
+        uploadImage({ file }).then(({ fileUrl }) => {;
           imageUrl = fileUrl;
           onImageUrlChange(imageUrl);
           render();

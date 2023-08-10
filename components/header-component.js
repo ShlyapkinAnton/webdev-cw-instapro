@@ -40,3 +40,20 @@ export function renderHeaderComponent({ element }) {
 
   return element;
 }
+
+export function renderHeaderUserComponent({ element, posts }) {
+  posts.splice(1);
+  const appHtml = posts.map((post) => {
+    return `
+    <div class="post-header" data-user-id="${post.user.id}">
+      <img src="${post.user.imageUrl}" class="post-header__user-image">
+      <p class="post-header__user-name">${post.user.name}</p>
+    </div>`
+  });
+  element.innerHTML = appHtml;
+}
+
+
+
+
+
