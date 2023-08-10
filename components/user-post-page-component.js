@@ -3,6 +3,7 @@ import { renderHeaderComponent, renderHeaderUserComponent } from "./header-compo
 import { posts, goToPage, user } from "../index.js";
 import { addDislike, addLike } from "../api.js";
 import { likes } from "./likes-names-components.js";
+import { formatDistanceToNow } from "date-fns";
 
 export function renderUserPostsPageComponent({ appEl, posts }) {
   console.log("Посты",posts);

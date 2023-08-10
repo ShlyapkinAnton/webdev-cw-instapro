@@ -1,3 +1,5 @@
+import { sanitizeHtml } from "./sanitizeHtml.js";
+
 const personalKey = "prod"; //anton-shlyapkin 
 const baseHost = "https://wedev-api.sky.pro"; //"https://webdev-hw-api.vercel.app"
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
@@ -24,10 +26,10 @@ export function registerUser({ login, password, name, imageUrl }) {
   return fetch(baseHost + "/api/user", {
     method: "POST",
     body: JSON.stringify({
-      login,
-      password,
-      name,
-      imageUrl,
+      login: sanitizeHtml(login),
+      password: sanitizeHtml(password),
+      name: sanitizeHtml(name),
+      imageUrl: sanitizeHtml(imageUrl),
     }),
   }).then((response) => {
     if (response.status === 400) {
@@ -41,8 +43,8 @@ export function loginUser({ login, password }) {
   return fetch(baseHost + "/api/user/login", {
     method: "POST",
     body: JSON.stringify({
-      login,
-      password,
+      login: sanitizeHtml(login),
+      password: sanitizeHtml(password),
     }),
   }).then((response) => {
     if (response.status === 400) {
@@ -118,8 +120,8 @@ export function addNewPost({ token, description, imageUrl }) {
       Authorization: token,
     },
     body: JSON.stringify({
-      description: description,
-      imageUrl: imageUrl,
+      description: sanitizeHtml(description),   
+      imageUrl: sanitizeHtml(imageUrl),
     }),
   }).then((response) => {
     if (response.status === 400) {
